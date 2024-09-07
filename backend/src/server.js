@@ -1,8 +1,13 @@
-const app = require('./app')
-const express = require('express')
-const { PORT } = require('./config/env/environment')
+const app = require('./app');
+const database = require('./config/database'); 
+const { PORT } = require('./config/env/environment'); 
 
-
-app.listen(PORT, () => {
-    console.log(`Server Running 🚀 on port ${PORT}`)
-})
+database.open()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server Running on port ${PORT} 🚀`);
+    });
+  })
+  .catch((error) => {
+    console.log('Error starting server:', error);
+  });
