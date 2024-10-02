@@ -69,7 +69,19 @@ docker compose down
 
 ```
 
+## Contributing
+
+Use [semantic commit messages](https://www.conventionalcommits.org/):
+
+- feat(context): nova funcionalidade para o usuário final;
+- fix(context): correção de bug para o usuário final;
+- docs(context): alterações na documentação;
+- style(context): formatação, ponto e vírgula ausente, etc. - sem alterações no código de produção;
+- refactor(context): refatoração do código de produção, ex.: renomeando uma variável;
+- test(context): adicionando testes ausentes, refatorando testes - sem alterações no código de produção;
+- chore(context): atualização de pacote, novo script de build, etc. - sem alterações no código de produção.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
- @ Unisagrado
+@ Unisagrado
