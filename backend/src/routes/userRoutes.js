@@ -4,13 +4,11 @@ const userController = require("../controllers/userController");
 const userRoutes = Router();
 
 userRoutes.get("/list", async (req, res) => {
-    // await userController.getUsers(req, res);
-    return res.json({ message: "Listar todos os usuários" });
+  await userController.getUsers(req, res);
 });
 
 userRoutes.post("/register", async (req, res) => {
-    // await userController.createUser(req, res);
-    return res.json({ message: "Registrar usuário" });
+  await userController.createUser(req, res);
 });
 
 module.exports = userRoutes;
