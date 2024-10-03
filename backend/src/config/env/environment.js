@@ -10,4 +10,6 @@ const envs = {
   PGPORT: process.env.PGPORT,
 };
 
+console.log(envs); 
+
 module.exports = envs;

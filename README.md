@@ -69,6 +69,16 @@ docker compose down
 
 ```
 
+## Useful Commands
+```
+# To load a preview of the database in localhost
+npx prisma studio
+```
+```
+# To run a migration
+npx prisma migrate dev --name init
+```
+
 ## Contributing
 
 Use [semantic commit messages](https://www.conventionalcommits.org/):

@@ -1,0 +1,67 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  cpf       String   @unique
+  country   String
+  state     String
+  city      String
+  orders    Order[]  
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+}
+
+model Supplier {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String   @unique
+  cnpj      String   @unique
+  email     String   @unique
+  products  Product[] 
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  description String
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  supplierId  Int
+  orderItems  OrderItem[] 
+}
+
+model Order {
+  id             Int        @id @default(autoincrement())
+  description    String
+  items          OrderItem[] 
+  address        String     
+  payment_method String     
+  total_price    Float      
+  date           DateTime   @default(now()) 
+  user           User       @relation(fields: [user_id], references: [id])
+  user_id        Int        
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  quantity   Int      // Quantidade de produtos nesse item do pedido
+  product    Product  @relation(fields: [product_id], references: [id])
+  product_id Int      // Relaciona o item a um produto
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    Int      // Relaciona o item a uma ordem
+}
