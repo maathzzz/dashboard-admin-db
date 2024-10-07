@@ -70,11 +70,11 @@ docker compose down
 ```
 
 ## Useful Commands
-```
+```bash
 # To load a preview of the database in localhost
 npx prisma studio
 ```
-```
+```bash
 # To run a migration
 npx prisma migrate dev --name init
 ```
