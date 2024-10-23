@@ -5,7 +5,7 @@ class ProductController {
   async getProducts(req, res) {
     try {
       const products = await prisma.product.findMany({
-        include: { supplier: true }, // Inclui o fornecedor relacionado ao produto
+        include: { supplier: true }, 
       });
       return res.json(products);
     } catch (error) {
