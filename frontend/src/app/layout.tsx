@@ -1,39 +1,36 @@
-import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster"
-import localFont from "next/font/local";
-import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+// import { auth } from '@/auth';
+// import Providers from '@/components/layout/providers';
+import { Toaster } from '@/components/ui/toaster';
+import type { Metadata } from 'next';
+import { Lato } from 'next/font/google';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Painel Admin - UNISAGRADO",
-  description: "Ciência da Computação - 2024",
+  title: 'Next Shadcn',
+  description: 'Basic dashboard with Next.js and Shadcn'
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700', '900'],
+  display: 'swap'
+});
+
+export default async function RootLayout({
+  children
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  // const session = await auth();
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <main>
+    <html
+      lang="en"
+      className={`${lato.className}`}
+      suppressHydrationWarning={true}
+    >
+      <body className={'overflow-hidden'}>
+          <Toaster />
           {children}
-        </main>
-        
-        <Toaster />
       </body>
     </html>
   );
