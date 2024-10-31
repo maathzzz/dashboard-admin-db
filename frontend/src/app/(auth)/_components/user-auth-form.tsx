@@ -10,25 +10,20 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { signIn } from 'next-auth/react';
-// import { useSearchParams } from 'next/navigation';
-// import { useTransition } from 'react';
+import { useRouter } from 'next/navigation'; // Importando o useRouter
 import { useForm } from 'react-hook-form';
-// import { toast } from 'sonner';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Enter a valid email address' }),
-    password: z.string({ message: 'Enter a valid email address' }),
+    password: z.string().min(1, { message: 'Enter a valid password' }),
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-    // const searchParams = useSearchParams();
-    // const callbackUrl = searchParams.get('callbackUrl');
-    // const [loading, startTransition] = useTransition();
+    const router = useRouter(); // Usando o useRouter para navegar
     const defaultValues = {
         email: 'admin@email.com',
         password: 'unisagrado'
@@ -39,14 +34,8 @@ export default function UserAuthForm() {
     });
 
     const onSubmit = async (data: UserFormValue) => {
-        // startTransition(() => {
-        //     signIn('credentials', {
-        //         email: data.email,
-        //         callbackUrl: callbackUrl ?? '/dashboard'
-        //     });
-        //     toast.success('Signed In Successfully!');
-        // });
         console.log(data);
+        router.push("/dashboard"); // Redirecionando após o envio do formulário
     };
 
     return (
