@@ -124,49 +124,47 @@ export type Product = {
 export const navItems: NavItem[] = [
   {
     title: 'Painel',
-    url: '/dashboard/overview',
+    url: '/dashboard/',
     icon: 'dashboard',
     isActive: false,
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
     title: 'Vendas',
-    url: '/dashboard/employee',
+    url: '/dashboard/sales',
     icon: 'user',
     isActive: false,
     items: [] // No child items
   },
   {
     title: 'Produtos',
-    url: '/dashboard/product',
+    url: '/dashboard/products',
     icon: 'product',
     isActive: false,
     items: [] // No child items
   },
   {
     title: 'Fornecedores',
-    url: '#', // Placeholder as there is no direct link for the parent
+    url: '/dashboard/suppliers', // Placeholder as there is no direct link for the parent
     icon: 'billing',
     isActive: true,
-
-    items: [
+  },
+  {
+    title: 'Usuário',
+    url: '#',
+    icon: 'user',
+    isActive: false,
+        items: [
       {
-        title: 'Profile',
-        url: '/dashboard/profile',
+        title: 'Usuários',
+        url: '/dashboard/users',
         icon: 'userPen'
       },
       {
-        title: 'Login',
-        url: '/',
+        title: 'Administradores',
+        url: '/dashboard/admin',
         icon: 'login'
       }
     ]
-  },
-  {
-    title: 'Usuários',
-    url: '/dashboard/users',
-    icon: 'user',
-    isActive: false,
-    items: [] // No child items
   }
 ];
