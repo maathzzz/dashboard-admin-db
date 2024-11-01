@@ -54,9 +54,9 @@ import ThemeToggle from './ThemeToggle/theme-toggle';
 import { UserNav } from './user-nav';
 
 export const company = {
-    name: 'Acme Inc',
+    name: 'Unisagrado',
     logo: GalleryVerticalEnd,
-    plan: 'Enterprise'
+    plan: 'CCOMP'
 };
 
 export default function AppSidebar({
