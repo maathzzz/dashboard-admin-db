@@ -69,6 +69,23 @@ docker compose down
 
 ```
 
+## Rodando o Projeto Frontend
+
+1. Vá até a pasta do frontend:
+```bash
+cd dashboard-admin-db/frontend
+```
+
+2. Instale as dependências do projeto (node_modules)
+```bash
+npm i
+```
+
+3. Execute o frontend em modo de desenvolvimento:
+```bash
+npm run dev
+```
+
 ## Useful Commands
 ```bash
 # To load a preview of the database in localhost
