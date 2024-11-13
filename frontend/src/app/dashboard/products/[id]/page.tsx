@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save } from "lucide-react";
-import { ProductStatus } from "../components/ProductStatus";
 import { initialProducts } from "../data/products";
 import { useState, useEffect } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -88,35 +86,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="stock">Stock</Label>
+                                <Label htmlFor="supplier">Supplier</Label>
                                 <Input
-                                    id="stock"
-                                    type="number"
-                                    value={product.stock}
-                                    onChange={(e) => setProduct({ ...product, stock: parseInt(e.target.value) })}
+                                    id="supplier"
+                                    value={product.supplier}
+                                    onChange={(e) => setProduct({ ...product, supplier: e.target.value })}
                                 />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="status">Status</Label>
-                                <Select
-                                    value={product.status}
-                                    onValueChange={(value: "In Stock" | "Low Stock" | "Out of Stock") =>
-                                        setProduct({ ...product, status: value })
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="In Stock">In Stock</SelectItem>
-                                        <SelectItem value="Low Stock">Low Stock</SelectItem>
-                                        <SelectItem value="Out of Stock">Out of Stock</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <div className="mt-2">
-                                    <ProductStatus status={product.status} />
-                                </div>
                             </div>
 
                             <div className="grid gap-2">

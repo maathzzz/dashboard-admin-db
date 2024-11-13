@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { ProductStatus } from "./ProductStatus";
 import type { Product } from "../data/products";
 
 interface AddProductDialogProps {
@@ -21,8 +19,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
         name: "",
         category: "",
         price: 0,
-        stock: 0,
-        status: "In Stock",
+        supplier: "",
         description: "",
         sku: "",
     });
@@ -35,8 +32,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
             name: "",
             category: "",
             price: 0,
-            stock: 0,
-            status: "In Stock",
+            supplier: "",
             description: "",
             sku: "",
         });
@@ -50,12 +46,12 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                     Add Product
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px]">
+            <DialogContent className="max-w-[90vw] sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] p-4">
                 <DialogHeader>
                     <DialogTitle>Add New Product</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-4 py-2">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
                             <Label htmlFor="name">Product Name</Label>
                             <Input
@@ -100,37 +96,13 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="stock">Stock</Label>
+                            <Label htmlFor="supplier">Supplier</Label>
                             <Input
-                                id="stock"
-                                type="number"
+                                id="supplier"
                                 required
-                                min="0"
-                                value={newProduct.stock}
-                                onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) })}
+                                value={newProduct.supplier}
+                                onChange={(e) => setNewProduct({ ...newProduct, supplier: e.target.value })}
                             />
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="status">Status</Label>
-                            <Select
-                                value={newProduct.status}
-                                onValueChange={(value: "In Stock" | "Low Stock" | "Out of Stock") =>
-                                    setNewProduct({ ...newProduct, status: value })
-                                }
-                            >
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="In Stock">In Stock</SelectItem>
-                                    <SelectItem value="Low Stock">Low Stock</SelectItem>
-                                    <SelectItem value="Out of Stock">Out of Stock</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <div className="mt-2">
-                                <ProductStatus status={newProduct.status} />
-                            </div>
                         </div>
 
                         <div className="grid gap-2 md:col-span-2">

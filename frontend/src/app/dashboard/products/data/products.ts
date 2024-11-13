@@ -3,8 +3,7 @@ export interface Product {
   name: string;
   category: string;
   price: number;
-  stock: number;
-  status: "In Stock" | "Low Stock" | "Out of Stock";
+  supplier: string;
   description?: string;
   sku?: string;
 }
@@ -15,8 +14,7 @@ export const initialProducts: Product[] = [
     name: "Smartphone X",
     category: "Electronics",
     price: 999.99,
-    stock: 45,
-    status: "In Stock",
+    supplier: "In Stock",
     description: "Latest model with advanced features",
     sku: "SMX-001"
   },
@@ -25,8 +23,7 @@ export const initialProducts: Product[] = [
     name: "Laptop Pro",
     category: "Electronics",
     price: 1299.99,
-    stock: 5,
-    status: "Low Stock",
+    supplier: "Low Stock",
     description: "Professional grade laptop",
     sku: "LP-002"
   },
@@ -35,8 +32,7 @@ export const initialProducts: Product[] = [
     name: "Wireless Headphones",
     category: "Accessories",
     price: 199.99,
-    stock: 0,
-    status: "Out of Stock",
+    supplier: "Out of Stock",
     description: "Premium wireless headphones",
     sku: "WH-003"
   },
@@ -45,8 +41,7 @@ export const initialProducts: Product[] = [
     name: "Smart Watch",
     category: "Wearables",
     price: 299.99,
-    stock: 28,
-    status: "In Stock",
+    supplier: "In Stock",
     description: "Feature-rich smartwatch",
     sku: "SW-004"
   },
@@ -55,8 +50,7 @@ export const initialProducts: Product[] = [
     name: "Tablet Air",
     category: "Electronics",
     price: 649.99,
-    stock: 12,
-    status: "In Stock",
+    supplier: "In Stock",
     description: "Lightweight and powerful tablet",
     sku: "TA-005"
   }

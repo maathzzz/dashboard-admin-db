@@ -7,7 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ProductStatus } from "./components/ProductStatus";
 import { AddProductDialog } from "./components/AddProductDialog";
 import { initialProducts, type Product } from "./data/products";
 
@@ -31,7 +30,7 @@ export default function ProductsPage() {
                 <div className="flex items-center justify-between flex-col sm:flex-row gap-4">
                     <div className="flex items-center gap-2">
                         <Package2 className="h-6 w-6" />
-                        <h1 className="text-2xl font-bold">Products</h1>
+                        <h1 className="text-2xl font-bold">Produtos</h1>
                     </div>
                     <AddProductDialog onAddProduct={handleAddProduct} />
                 </div>
@@ -39,7 +38,7 @@ export default function ProductsPage() {
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                     <Input
-                        placeholder="Search products..."
+                        placeholder="Procurar produto..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10 w-full sm:max-w-sm"
@@ -51,12 +50,12 @@ export default function ProductsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Product</TableHead>
-                                    <TableHead className="hidden md:table-cell">Category</TableHead>
-                                    <TableHead>Price</TableHead>
-                                    <TableHead className="hidden sm:table-cell">Stock</TableHead>
-                                    <TableHead className="hidden lg:table-cell">Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
+                                    <TableHead>Produto</TableHead>
+                                    <TableHead className="hidden md:table-cell">Categoria</TableHead>
+                                    <TableHead>Preço</TableHead>
+                                    <TableHead className="hidden sm:table-cell">Descrição</TableHead>
+                                    <TableHead className="hidden lg:table-cell">Fornecedor</TableHead>
+                                    <TableHead className="text-right"></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -64,14 +63,13 @@ export default function ProductsPage() {
                                     <TableRow
                                         key={product.id}
                                         className="cursor-pointer hover:bg-muted/50"
-                                        onClick={() => router.push(`/dashboard/products/${product.id}`)}
                                     >
                                         <TableCell className="font-medium">{product.name}</TableCell>
                                         <TableCell className="hidden md:table-cell">{product.category}</TableCell>
                                         <TableCell>${product.price.toFixed(2)}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{product.stock}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{product.description}</TableCell>
                                         <TableCell className="hidden lg:table-cell">
-                                            <ProductStatus status={product.status} />
+                                            {product.supplier}
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
