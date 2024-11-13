@@ -127,21 +127,21 @@ export const navItems: NavItem[] = [
     url: '/dashboard/',
     icon: 'dashboard',
     isActive: false,
-    items: [] // Empty array as there are no child items for Dashboard
+    items: [] 
   },
   {
     title: 'Vendas',
     url: '/dashboard/sales',
     icon: 'user',
     isActive: false,
-    items: [] // No child items
+    items: [] 
   },
   {
     title: 'Produtos',
     url: '/dashboard/products',
     icon: 'product',
     isActive: false,
-    items: [] // No child items
+    items: [] 
   },
   {
     title: 'Fornecedores',
