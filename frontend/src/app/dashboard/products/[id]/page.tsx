@@ -38,7 +38,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                     >
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
-                    <h1 className="text-2xl font-bold">Edit Product</h1>
+                    <h1 className="text-2xl font-bold">Editar Produto</h1>
                 </div>
 
                 <Card>

@@ -43,7 +43,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
             <DialogTrigger asChild>
                 <Button className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Product
+                    Adicionar Produto
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[90vw] sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] p-4">
