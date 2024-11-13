@@ -4,35 +4,32 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-import type { Product } from "../../../../data/products";
+import type { Supplier } from "../../../../data/suppliers";
 
-interface AddProductDialogProps {
-    onAddProduct: (product: Omit<Product, "id">) => void;
+interface AddSuppliertDialogProps {
+    onAddSupplier: (supplier: Omit<Supplier, "id">) => void;
 }
 
-export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
+export function AddSupplierDialog({ onAddSupplier }: AddSuppliertDialogProps) {
     const [open, setOpen] = useState(false);
-    const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
+    const [newSupplier, setNewSupplier] = useState<Omit<Supplier, "id">>({
         name: "",
-        category: "",
-        price: 0,
-        supplier: "",
-        description: "",
+        phone: "",
+        cnpj: "",
+        email: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onAddProduct(newProduct);
+        onAddSupplier(newSupplier);
         setOpen(false);
-        setNewProduct({
+        setNewSupplier({
             name: "",
-            category: "",
-            price: 0,
-            supplier: "",
-            description: "",
+            phone: "",
+            cnpj: "",
+            email: "",
         });
     };
 
@@ -41,7 +38,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
             <DialogTrigger asChild>
                 <Button className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
-                    Adicionar Produto
+                    Adicionar Fornecedor
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[90vw] sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] p-4">
@@ -55,51 +52,41 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                             <Input
                                 id="name"
                                 required
-                                value={newProduct.name}
-                                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                value={newSupplier.name}
+                                onChange={(e) => setNewSupplier({ ...newSupplier, name: e.target.value })}
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="category">Categoria</Label>
+                            <Label htmlFor="category">Telefone</Label>
                             <Input
                                 id="category"
                                 required
-                                value={newProduct.category}
-                                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                                value={newSupplier.phone}
+                                onChange={(e) => setNewSupplier({ ...newSupplier, phone: e.target.value })}
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="price">Preço</Label>
+                            <Label htmlFor="price">CNPJ</Label>
                             <Input
                                 id="price"
                                 type="number"
                                 step="0.01"
                                 required
                                 min="0"
-                                value={newProduct.price}
-                                onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
+                                value={newSupplier.cnpj}
+                                onChange={(e) => setNewSupplier({ ...newSupplier, cnpj: e.target.value })}
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="supplier">Fornecedor</Label>
+                            <Label htmlFor="supplier">E-mail</Label>
                             <Input
                                 id="supplier"
                                 required
-                                value={newProduct.supplier}
-                                onChange={(e) => setNewProduct({ ...newProduct, supplier: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="grid gap-2 md:col-span-2">
-                            <Label htmlFor="description">Descrição do Produto</Label>
-                            <Textarea
-                                id="description"
-                                value={newProduct.description}
-                                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                rows={4}
+                                value={newSupplier.email}
+                                onChange={(e) => setNewSupplier({ ...newSupplier, email: e.target.value })}
                             />
                         </div>
                     </div>
@@ -108,7 +95,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Add Product</Button>
+                        <Button type="submit">Criar</Button>
                     </div>
                 </form>
             </DialogContent>

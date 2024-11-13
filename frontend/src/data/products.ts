@@ -5,7 +5,6 @@ export interface Product {
   price: number;
   supplier: string;
   description?: string;
-  sku?: string;
 }
 
 export const initialProducts: Product[] = [
@@ -16,7 +15,6 @@ export const initialProducts: Product[] = [
     price: 999.99,
     supplier: "In Stock",
     description: "Latest model with advanced features",
-    sku: "SMX-001"
   },
   {
     id: "2",
@@ -25,7 +23,6 @@ export const initialProducts: Product[] = [
     price: 1299.99,
     supplier: "Low Stock",
     description: "Professional grade laptop",
-    sku: "LP-002"
   },
   {
     id: "3",
@@ -34,7 +31,6 @@ export const initialProducts: Product[] = [
     price: 199.99,
     supplier: "Out of Stock",
     description: "Premium wireless headphones",
-    sku: "WH-003"
   },
   {
     id: "4",
@@ -43,7 +39,6 @@ export const initialProducts: Product[] = [
     price: 299.99,
     supplier: "In Stock",
     description: "Feature-rich smartwatch",
-    sku: "SW-004"
   },
   {
     id: "5",
@@ -52,6 +47,5 @@ export const initialProducts: Product[] = [
     price: 649.99,
     supplier: "In Stock",
     description: "Lightweight and powerful tablet",
-    sku: "TA-005"
   }
 ];

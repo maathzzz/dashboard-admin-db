@@ -1,62 +1,64 @@
 "use client"
-import React, { useEffect, useState } from 'react';
-import { useTable, Column } from 'react-table';
-import { fetchSalesData, SaleData } from '../../../../lib/fetchSalesData';
+// import React, { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const SalesTable: React.FC = () => {
-    const [data, setData] = useState<SaleData[]>([]);
+export function SalesTable() {
+    // const [data, setData] = useState<SaleData[]>([]);
 
-    useEffect(() => {
-        const loadSalesData = async () => {
-            const sales = await fetchSalesData();
-            setData(sales);
-        };
-        loadSalesData();
-    }, []);
+    // useEffect(() => {
+    //     const loadSalesData = async () => {
+    //         const sales = await fetchSalesData();
+    //         setData(sales);
+    //     };
+    //     loadSalesData();
+    // }, []);
 
-    const columns = React.useMemo<Column<SaleData>[]>(
-        () => [
-            { Header: 'ID', accessor: 'id' },
-            { Header: 'Item', accessor: 'item' },
-            { Header: 'Quantidade', accessor: 'quantity' },
-            { Header: 'Preço Unitário', accessor: 'price' },
-            { Header: 'Total', accessor: 'total' },
-            { Header: 'Data', accessor: 'date' },
-        ],
-        []
-    );
+    const filteredSuppliers = [
+        {
+            "name": "Cetro Máquinas",
+            "category": "Eletrônico",
+            "price": 100,
+            "id": 10,
+            "description": "asd",
+            "supplier": "CETRO"
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+        }
+    ]
 
     return (
         <div className="overflow-auto">
-            <table {...getTableProps()} className="min-w-full border-collapse border border-gray-200">
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-100">
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()} className="p-3 border-b text-left">
-                                    {column.render('Header')}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()} className="hover:bg-gray-50">
-                                {row.cells.map(cell => (
-                                    <td {...cell.getCellProps()} className="p-3 border-b text-left">
-                                        {cell.render('Cell')}
-                                    </td>
-                                ))}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            <ScrollArea className="h-[calc(100vh-16rem)]">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>ID</TableHead>
+                            <TableHead className="hidden md:table-cell">Items</TableHead>
+                            <TableHead>Preço Total</TableHead>
+                            <TableHead className="hidden sm:table-cell">Endereço</TableHead>
+                            <TableHead className="hidden lg:table-cell">Método de Pagamento</TableHead>
+                            <TableHead className="hidden lg:table-cell">Usuário</TableHead>
+                            <TableHead className="hidden lg:table-cell">Data</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {filteredSuppliers.map((supplier) => (
+                            <TableRow
+                                key={supplier.id}
+                                className="cursor-pointer hover:bg-muted/50"
+                            >
+                                <TableCell className="font-medium">{supplier.id}</TableCell>
+                                <TableCell className="hidden md:table-cell">{supplier.category}</TableCell>
+                                <TableCell>${supplier.price.toFixed(2)}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{supplier.description}</TableCell>
+                                <TableCell className="hidden lg:table-cell">
+                                    {supplier.supplier}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </ScrollArea>
         </div>
     );
 };
