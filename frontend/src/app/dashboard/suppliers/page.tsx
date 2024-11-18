@@ -1,47 +1,39 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { AddSupplierDialog } from "./components/AddSupplierDialog";
+import { fetchSuppliers } from "@/services/apiService";
 import type { Supplier } from "../../../data/suppliers";
 
-const initialSuppliers: Supplier[] = [
-    {
-        id: 1,
-        name: "Fornecedor A",
-        phone: "123-456-7890",
-        cnpj: "12.345.678/0001-99",
-        email: "fornecedorA@example.com",
-    },
-    {
-        id: 2,
-        name: "Fornecedor B",
-        phone: "987-654-3210",
-        cnpj: "98.765.432/0001-10",
-        email: "fornecedorB@example.com",
-    },
-    {
-        id: 3,
-        name: "Fornecedor C",
-        phone: "555-555-5555",
-        cnpj: "55.555.555/0001-55",
-        email: "fornecedorC@example.com",
-    },
-];
 export default function SuppliersPage() {
-    const [suppliers, setSuppliers] = useState<Supplier[]>(initialSuppliers);
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const filteredSuppliers = suppliers.filter(supplier =>
+    useEffect(() => {
+        const loadSuppliers = async () => {
+            setLoading(true);
+            const data = await fetchSuppliers<Supplier[]>();
+            if (data) {
+                setSuppliers(data);
+            }
+            setLoading(false);
+        };
+
+        loadSuppliers();
+    }, []);
+
+    const filteredSuppliers = suppliers.filter((supplier) =>
         supplier.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleAddSupplier = (newSupplier: Omit<Supplier, "id">) => {
-        setSuppliers([...suppliers, { ...newSupplier, id: 1 }]);
+        setSuppliers([...suppliers, { ...newSupplier, id: Date.now() }]);
     };
 
     return (
@@ -66,56 +58,67 @@ export default function SuppliersPage() {
                 </div>
 
                 <div className="rounded-lg border bg-card">
-                    <ScrollArea className="h-[calc(100vh-16rem)]">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Fornecedor</TableHead>
-                                    <TableHead className="hidden md:table-cell">Telefone</TableHead>
-                                    <TableHead>CNPJ</TableHead>
-                                    <TableHead className="hidden sm:table-cell">E-mail</TableHead>
-                                    <TableHead className="text-right"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {filteredSuppliers.map((supplier) => (
-                                    <TableRow
-                                        key={supplier.id}
-                                        className="cursor-pointer hover:bg-muted/50"
-                                    >
-                                        <TableCell className="font-medium">{supplier.name}</TableCell>
-                                        <TableCell className="hidden md:table-cell">{supplier.phone}</TableCell>
-                                        <TableCell>{supplier.cnpj}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{supplier.email}</TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                    }}
-                                                >
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="text-destructive"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSuppliers(suppliers.filter(s => s.id !== supplier.id));
-                                                    }}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
+                    {loading ? (
+                        <p className="text-center py-4">Carregando fornecedores...</p>
+                    ) : (
+                        <ScrollArea className="h-[calc(100vh-16rem)]">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Fornecedor</TableHead>
+                                        <TableHead className="hidden md:table-cell">Telefone</TableHead>
+                                        <TableHead>CNPJ</TableHead>
+                                        <TableHead className="hidden sm:table-cell">E-mail</TableHead>
+                                        <TableHead className="text-right"></TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </ScrollArea>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredSuppliers.length > 0 ? (
+                                        filteredSuppliers.map((supplier) => (
+                                            <TableRow
+                                                key={supplier.id}
+                                                className="cursor-pointer hover:bg-muted/50"
+                                            >
+                                                <TableCell className="font-medium">{supplier.name}</TableCell>
+                                                <TableCell className="hidden md:table-cell">{supplier.phone}</TableCell>
+                                                <TableCell>{supplier.cnpj}</TableCell>
+                                                <TableCell className="hidden sm:table-cell">{supplier.email}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <div
+                                                        className="flex justify-end gap-2"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        <Button variant="ghost" size="icon">
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="text-destructive"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setSuppliers(
+                                                                    suppliers.filter((s) => s.id !== supplier.id)
+                                                                );
+                                                            }}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center">
+                                                Nenhum fornecedor encontrado.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </ScrollArea>
+                    )}
                 </div>
             </div>
         </div>

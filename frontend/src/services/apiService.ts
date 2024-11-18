@@ -1,9 +1,10 @@
-export async function fetchSuppliers<T>(endpoint: string): Promise<T | null> {
+export async function fetchSuppliers<T>(): Promise<T | null> {
+    const endpoint = "http://localhost:3001/supplier/list";
     try {
         const response = await fetch(endpoint, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
         });
 
