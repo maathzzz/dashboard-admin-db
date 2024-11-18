@@ -145,7 +145,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Fornecedores',
-    url: '/dashboard/suppliers', // Placeholder as there is no direct link for the parent
+    url: '/dashboard/suppliers',
     icon: 'billing',
     isActive: true,
   },

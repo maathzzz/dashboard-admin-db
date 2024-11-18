@@ -43,12 +43,12 @@ export function AddSupplierDialog({ onAddSupplier }: AddSuppliertDialogProps) {
             </DialogTrigger>
             <DialogContent className="max-w-[90vw] sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] p-4">
                 <DialogHeader>
-                    <DialogTitle>Criar novo produto</DialogTitle>
+                    <DialogTitle>Novo Fornecedor</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4 py-2">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Nome do produto</Label>
+                            <Label htmlFor="name">Fornecedor</Label>
                             <Input
                                 id="name"
                                 required
