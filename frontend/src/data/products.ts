@@ -4,6 +4,7 @@ export interface Product {
   category: string;
   price: number;
   supplier: string;
+  supplierId: number;
   description?: string;
 }
 
@@ -14,6 +15,7 @@ export const initialProducts: Product[] = [
     category: "Electronics",
     price: 999.99,
     supplier: "In Stock",
+    supplierId: 1,
     description: "Latest model with advanced features",
   },
   {
@@ -22,6 +24,7 @@ export const initialProducts: Product[] = [
     category: "Electronics",
     price: 1299.99,
     supplier: "Low Stock",
+    supplierId: 1,
     description: "Professional grade laptop",
   },
   {
@@ -30,6 +33,7 @@ export const initialProducts: Product[] = [
     category: "Accessories",
     price: 199.99,
     supplier: "Out of Stock",
+    supplierId: 1,
     description: "Premium wireless headphones",
   },
   {
@@ -38,6 +42,7 @@ export const initialProducts: Product[] = [
     category: "Wearables",
     price: 299.99,
     supplier: "In Stock",
+    supplierId: 1,
     description: "Feature-rich smartwatch",
   },
   {
@@ -46,6 +51,7 @@ export const initialProducts: Product[] = [
     category: "Electronics",
     price: 649.99,
     supplier: "In Stock",
+    supplierId: 1,
     description: "Lightweight and powerful tablet",
   }
 ];

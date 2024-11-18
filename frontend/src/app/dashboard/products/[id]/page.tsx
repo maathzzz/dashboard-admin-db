@@ -1,119 +1,120 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Save } from "lucide-react";
-import { initialProducts } from "../../../../data/products";
-import { useState, useEffect } from "react";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
-export default function ProductDetails({ params }: { params: { id: string } }) {
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { ProductForm, ProductFormValues } from "../components/ProductForm";
+import { Product } from "../../../../data/products";
+import { Supplier } from "../../../../data/suppliers";
+
+export default function ProductEdit() {
+    const params = useParams();
     const router = useRouter();
-    const [product, setProduct] = useState(initialProducts.find(p => p.id === params.id));
+    const { toast } = useToast();
+    const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
+    const [product, setProduct] = useState<Product | null>(null);
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
     useEffect(() => {
-        if (!product) {
+        const fetchData = async () => {
+            try {
+                const [productRes, suppliersRes] = await Promise.all([
+                    fetch(`/api/products/${params.id}`),
+                    fetch('/api/suppliers')
+                ]);
+
+                const [productData, suppliersData] = await Promise.all([
+                    productRes.json(),
+                    suppliersRes.json()
+                ]);
+
+                setProduct(productData);
+                setSuppliers(suppliersData);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (error) {
+                toast({
+                    variant: "destructive",
+                    title: "Erro",
+                    description: "Erro ao carregar dados do produto",
+                });
+            } finally {
+                setInitialLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [params.id, toast]);
+
+    async function onSubmit(data: ProductFormValues) {
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/products/${params.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...data,
+                    price: Number(data.price),
+                    supplierId: Number(data.supplierId),
+                }),
+            });
+
+            if (!response.ok) throw new Error("Erro ao atualizar produto");
+
+            toast({
+                title: "Sucesso",
+                description: "Produto atualizado com sucesso",
+            });
+
             router.push("/dashboard/products");
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Erro",
+                description: "Erro ao atualizar produto",
+            });
+        } finally {
+            setLoading(false);
         }
-    }, [product, router]);
+    }
 
-    if (!product) return null;
+    if (initialLoading) {
+        return (
+            <div className="flex h-[50vh] items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
 
-    const handleSave = () => {
-        // Implement save logic here
-        router.push("/dashboard/products");
-    };
+    const initialData = product ? {
+        name: product.name,
+        price: product.price.toString(),
+        description: product.description,
+        category: product.category,
+        supplierId: product.supplierId.toString(),
+    } : undefined;
 
     return (
-        <div className="container mx-auto py-8 px-4">
-            <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-                <div className="flex items-center gap-4">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => router.push("/dashboard/products")}
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                    <h1 className="text-2xl font-bold">Editar Produto</h1>
-                </div>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Product Information</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="grid gap-4">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Product Name</Label>
-                                <Input
-                                    id="name"
-                                    value={product.name}
-                                    onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="sku">SKU</Label>
-                                <Input
-                                    id="sku"
-                                    value={product.sku}
-                                    onChange={(e) => setProduct({ ...product, sku: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="category">Category</Label>
-                                <Input
-                                    id="category"
-                                    value={product.category}
-                                    onChange={(e) => setProduct({ ...product, category: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="price">Price</Label>
-                                <Input
-                                    id="price"
-                                    type="number"
-                                    step="0.01"
-                                    value={product.price}
-                                    onChange={(e) => setProduct({ ...product, price: parseFloat(e.target.value) })}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="supplier">Supplier</Label>
-                                <Input
-                                    id="supplier"
-                                    value={product.supplier}
-                                    onChange={(e) => setProduct({ ...product, supplier: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    value={product.description}
-                                    onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                                    rows={4}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end">
-                            <Button onClick={handleSave}>
-                                <Save className="h-4 w-4 mr-2" />
-                                Save Changes
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+        <div className="container mx-auto py-10">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Editar Produto</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ProductForm
+                        initialData={initialData}
+                        suppliers={suppliers}
+                        onSubmit={onSubmit}
+                        loading={loading}
+                    />
+                </CardContent>
+            </Card>
         </div>
     );
 }
