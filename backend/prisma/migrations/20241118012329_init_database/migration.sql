@@ -39,6 +39,7 @@ CREATE TABLE "Product" (
     "name" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "description" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
     "supplierId" INTEGER NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
@@ -84,15 +85,3 @@ CREATE UNIQUE INDEX "Supplier_cnpj_key" ON "Supplier"("cnpj");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Supplier_email_key" ON "Supplier"("email");
-
--- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
