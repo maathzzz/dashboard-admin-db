@@ -8,6 +8,7 @@ const envs = {
   PGDATABASE: process.env.PGDATABASE,
   PGPASSWORD: process.env.PGPASSWORD,
   PGPORT: process.env.PGPORT,
+  JWT_SECRET: process.env.JWT_SECRET,
 };
 
 console.log(envs); 
