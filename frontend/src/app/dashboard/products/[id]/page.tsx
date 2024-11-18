@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ProductForm, ProductFormValues } from "../components/ProductForm";
 import { Product } from "../../../../data/products";
-import { Supplier } from "../../../../data/suppliers";
 
 export default function ProductEdit() {
     const params = useParams();
@@ -18,24 +17,18 @@ export default function ProductEdit() {
     const [loading, setLoading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(true);
     const [product, setProduct] = useState<Product | null>(null);
-    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchProduct = async () => {
             try {
-                const [productRes, suppliersRes] = await Promise.all([
-                    fetch(`/api/products/${params.id}`),
-                    fetch('/api/suppliers')
-                ]);
+                const response = await fetch(`http://localhost:3001/product/${params.id}`);
 
-                const [productData, suppliersData] = await Promise.all([
-                    productRes.json(),
-                    suppliersRes.json()
-                ]);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch product");
+                }
 
+                const productData = await response.json();
                 setProduct(productData);
-                setSuppliers(suppliersData);
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 toast({
                     variant: "destructive",
@@ -47,13 +40,13 @@ export default function ProductEdit() {
             }
         };
 
-        fetchData();
+        fetchProduct();
     }, [params.id, toast]);
 
     async function onSubmit(data: ProductFormValues) {
         setLoading(true);
         try {
-            const response = await fetch(`/api/products/${params.id}`, {
+            const response = await fetch(`http://localhost:3001/product/update/${params.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -92,13 +85,17 @@ export default function ProductEdit() {
         );
     }
 
-    const initialData = product ? {
+    if (!product) {
+        return null;
+    }
+
+    const initialData: ProductFormValues = {
         name: product.name,
         price: product.price.toString(),
         description: product.description,
         category: product.category,
         supplierId: product.supplierId.toString(),
-    } : undefined;
+    };
 
     return (
         <div className="container mx-auto py-10">
@@ -109,7 +106,7 @@ export default function ProductEdit() {
                 <CardContent>
                     <ProductForm
                         initialData={initialData}
-                        suppliers={suppliers}
+                        supplier={product.supplier}
                         onSubmit={onSubmit}
                         loading={loading}
                     />

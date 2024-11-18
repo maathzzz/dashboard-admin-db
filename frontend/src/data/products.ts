@@ -3,9 +3,10 @@ export interface Product {
   name: string;
   category: string;
   price: number;
-  supplier: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supplier: any;
   supplierId: number;
-  description?: string;
+  description: string;
 }
 
 export const initialProducts: Product[] = [

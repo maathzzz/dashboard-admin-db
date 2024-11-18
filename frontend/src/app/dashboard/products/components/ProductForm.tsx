@@ -16,18 +16,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Supplier } from "../../../../data/suppliers";
 
-export const productSchema = z.object({
+const productSchema = z.object({
     name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
-    price: z.string().refine((val) => !isNaN(Number(val)), "Preço deve ser um número válido"),
+    price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, "Preço deve ser um número válido maior que zero"),
     description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
     category: z.string().min(1, "Categoria é obrigatória"),
     supplierId: z.string().min(1, "Fornecedor é obrigatório"),
@@ -36,22 +29,16 @@ export const productSchema = z.object({
 export type ProductFormValues = z.infer<typeof productSchema>;
 
 interface ProductFormProps {
-    initialData?: ProductFormValues;
-    suppliers: Supplier[];
+    initialData: ProductFormValues;
+    supplier: Supplier;
     onSubmit: (data: ProductFormValues) => Promise<void>;
     loading?: boolean;
 }
 
-export function ProductForm({ initialData, suppliers, onSubmit, loading }: ProductFormProps) {
+export function ProductForm({ initialData, supplier, onSubmit, loading }: ProductFormProps) {
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
-        defaultValues: initialData || {
-            name: "",
-            price: "",
-            description: "",
-            category: "",
-            supplierId: "",
-        },
+        defaultValues: initialData,
     });
 
     return (
@@ -82,6 +69,7 @@ export function ProductForm({ initialData, suppliers, onSubmit, loading }: Produ
                                     <Input
                                         type="number"
                                         step="0.01"
+                                        min="0"
                                         placeholder="0.00"
                                         {...field}
                                     />
@@ -105,30 +93,14 @@ export function ProductForm({ initialData, suppliers, onSubmit, loading }: Produ
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name="supplierId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Fornecedor</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecione um fornecedor" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {suppliers.map((supplier) => (
-                                            <SelectItem key={supplier.id} value={supplier.id.toString()}>
-                                                {supplier.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <FormItem>
+                        <FormLabel>Fornecedor</FormLabel>
+                        <Input
+                            value={supplier.name}
+                            disabled
+                            className="bg-muted"
+                        />
+                    </FormItem>
                 </div>
 
                 <FormField
