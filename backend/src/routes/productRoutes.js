@@ -8,6 +8,10 @@ productRoutes.get("/list", async (req, res) => {
   await product.getProducts(req, res);
 });
 
+productRoutes.get("/:id", async (req, res) => {
+  await product.getProductById(req, res);
+});
+
 productRoutes.post("/register", async (req, res) => {
   await product.create(req, res);
 });

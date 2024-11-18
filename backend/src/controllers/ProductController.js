@@ -14,6 +14,26 @@ class ProductController {
     }
   }
 
+  async getProductById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: parseInt(id, 10) },
+      include: { supplier: true },
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "Produto não encontrado." });
+    }
+
+    return res.json(product);
+  } catch (error) {
+    console.error("Erro ao buscar produto:", error);
+    return res.status(500).json({ error: "Erro ao buscar produto." });
+  }
+}
+
   async create(req, res) {
     const { 
       name, 
