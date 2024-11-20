@@ -42,6 +42,7 @@ model Product {
   price       Float
   description String
   category    String
+  stock       Int
   supplier    Supplier @relation(fields: [supplierId], references: [id])
   supplierId  Int
   orderItems  OrderItem[] 
