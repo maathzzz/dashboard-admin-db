@@ -10,9 +10,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation'; // Importando o useRouter
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { useToast } from "@/hooks/use-toast"; // Importa o hook de toast do ShadCN
 import GithubSignInButton from './github-auth-button';
 
 const formSchema = z.object({
@@ -23,19 +24,48 @@ const formSchema = z.object({
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-    const router = useRouter(); // Usando o useRouter para navegar
+    const { toast } = useToast(); 
+    const router = useRouter();
     const defaultValues = {
-        email: 'admin@email.com',
-        password: 'unisagrado'
+        email: '',
+        password: ''
     };
+
     const form = useForm<UserFormValue>({
         resolver: zodResolver(formSchema),
         defaultValues
     });
 
     const onSubmit = async (data: UserFormValue) => {
-        console.log(data);
-        router.push("/dashboard"); // Redirecionando após o envio do formulário
+        try {
+            const response = await fetch('http://localhost:3001/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed. Please check your credentials.');
+            }
+
+            const { token } = await response.json();
+            localStorage.setItem('token', token); 
+
+            toast({
+                title: 'Login realizado com sucesso!',
+                description: 'Você será redirecionado para o dashboard.',
+                variant: 'default',
+            });
+
+            router.push('/dashboard'); 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            toast({
+                title: 'Erro ao realizar login',
+                description: err.message || 'Algo deu errado. Tente novamente.',
+                variant: 'destructive',
+            });
+        }
     };
 
     return (
