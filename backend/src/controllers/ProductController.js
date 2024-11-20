@@ -40,12 +40,13 @@ class ProductController {
       price, 
       description, 
       category,
+      stock,
       supplierId 
     } = req.body;
 
     try {
       const product = await prisma.product.create({
-        data: { name, price, description, category, supplierId },
+        data: { name, price, description, category, stock, supplierId },
       });
       return res.status(201).json(product);
     } catch (error) {
@@ -81,13 +82,14 @@ class ProductController {
       price,
       description,
       category,
+      stock,
       supplierId
     } = req.body;
 
     try {
       const product = await prisma.product.update({
         where: { id: parseInt(id, 10) },
-        data: { name, price, description, category, supplierId },
+        data: { name, price, description, category, stock, supplierId },
       });
       return res.status(200).json({ message: "Produto atualizado com sucesso.", product });
     } catch (error) {
