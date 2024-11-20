@@ -1,6 +1,6 @@
 # dashboard-admin-db
 
-CRUD Admin para manipular dados em um banco de dados 🧑‍💻
+Painel Administrador - Projeto desenvolvido para o Curso de Ciência da Computação nas matérias de Engenharia de Software Aplicada, Princípios de Banco de Dados e Aplicações Digitais 🧑‍💻
 
 ## Requisitos
 Antes de iniciar, certifique-se de ter os seguintes softwares instalados:
