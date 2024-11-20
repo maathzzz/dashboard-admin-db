@@ -6,8 +6,8 @@ import { Lato } from 'next/font/google';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Painel Admin',
+  description: 'Ciência da Computação - Unisagrado'
 };
 
 const lato = Lato({
