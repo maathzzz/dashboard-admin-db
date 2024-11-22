@@ -5,7 +5,7 @@ const auth = require("../middlewares/auth");
 const orderRoutes = Router();
 const orderController = new OrderController();
 
-orderRoutes.post("/create", auth, async (req, res) => {
+orderRoutes.post("/", auth, async (req, res) => {
   await orderController.createOrder(req, res);
 });
 
@@ -13,7 +13,7 @@ orderRoutes.get("/:id", auth, async (req, res) => {
   await orderController.getOrderById(req, res);
 });
 
-orderRoutes.get("/list", auth, async (req, res) => {
+orderRoutes.get("/", auth, async (req, res) => {
   await orderController.listOrders(req, res);
 });
 
