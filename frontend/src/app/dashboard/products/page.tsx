@@ -1,28 +1,63 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { AddProductDialog } from "./components/AddProductDialog";
-import { initialProducts, type Product } from "../../../data/products";
+import productService from "@/services/productService";
+import { Product } from "@/data/products";
 
 export default function ProductsPage() {
     const router = useRouter();
-    const [products, setProducts] = useState(initialProducts);
+    const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredProducts = products.filter(product =>
+    // Fetch products when the component mounts
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const data = await productService.getProducts();
+                setProducts(data);
+            } catch (error) {
+                console.error("Erro ao buscar produtos:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
+
+    const handleAddProduct = async () => {
+        try {
+            const data = await productService.getProducts();
+            setProducts(data);
+        } catch (error) {
+            console.error("Erro ao atualizar lista de produtos:", error);
+        }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleDeleteProduct = async (id: any) => {
+        try {
+            await productService.deleteProduct(id);
+            setProducts(products.filter((product) => product.id !== id));
+        } catch (error) {
+            console.error("Erro ao deletar produto:", error);
+        }
+    };
+
+    const filteredProducts = products.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    const handleAddProduct = (newProduct: Omit<Product, "id">) => {
-        const id = (products.length + 1).toString();
-        setProducts([...products, { ...newProduct, id }]);
-    };
 
     return (
         <div className="container mx-auto py-8 px-4">
@@ -50,9 +85,11 @@ export default function ProductsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>ID</TableHead>
                                     <TableHead>Produto</TableHead>
                                     <TableHead className="hidden md:table-cell">Categoria</TableHead>
                                     <TableHead>Preço</TableHead>
+                                    <TableHead>Estoque</TableHead>
                                     <TableHead className="hidden sm:table-cell">Descrição</TableHead>
                                     <TableHead className="hidden lg:table-cell">Fornecedor</TableHead>
                                     <TableHead className="text-right"></TableHead>
@@ -64,15 +101,24 @@ export default function ProductsPage() {
                                         key={product.id}
                                         className="cursor-pointer hover:bg-muted/50"
                                     >
+                                        <TableCell className="font-medium">{product.id}</TableCell>
                                         <TableCell className="font-medium">{product.name}</TableCell>
-                                        <TableCell className="hidden md:table-cell">{product.category}</TableCell>
+                                        <TableCell className="hidden md:table-cell">
+                                            {product.category}
+                                        </TableCell>
                                         <TableCell>${product.price.toFixed(2)}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">{product.description}</TableCell>
+                                        <TableCell>{product.stock}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">
+                                            {product.description || "N/A"}
+                                        </TableCell>
                                         <TableCell className="hidden lg:table-cell">
-                                            {product.supplier}
+                                            {product.supplier?.name || "N/A"}
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                                            <div
+                                                className="flex justify-end gap-2"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -89,7 +135,7 @@ export default function ProductsPage() {
                                                     className="text-destructive"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setProducts(products.filter(p => p.id !== product.id));
+                                                        handleDeleteProduct(product.id);
                                                     }}
                                                 >
                                                     <Trash2 className="h-4 w-4" />

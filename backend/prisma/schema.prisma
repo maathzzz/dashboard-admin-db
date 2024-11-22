@@ -43,8 +43,8 @@ model Product {
   description String
   category    String
   stock       Int
-  supplier    Supplier @relation(fields: [supplierId], references: [id])
-  supplierId  Int
+  supplier    Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId  Int?
   orderItems  OrderItem[] 
 }
 

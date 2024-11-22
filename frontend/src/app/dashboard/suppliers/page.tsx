@@ -7,8 +7,15 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import { AddSupplierDialog } from "./components/AddSupplierDialog";
-import { fetchSuppliers } from "@/services/apiService";
-import type { Supplier } from "../../../data/suppliers";
+import supplierService from "@/services/supplierService";
+
+interface Supplier {
+    id: number;
+    name: string;
+    phone: string;
+    cnpj: string;
+    email: string;
+}
 
 export default function SuppliersPage() {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -18,9 +25,11 @@ export default function SuppliersPage() {
     useEffect(() => {
         const loadSuppliers = async () => {
             setLoading(true);
-            const data = await fetchSuppliers<Supplier[]>();
-            if (data) {
+            try {
+                const data = await supplierService.getSuppliers();
                 setSuppliers(data);
+            } catch (error) {
+                console.error("Erro ao carregar fornecedores:", error);
             }
             setLoading(false);
         };
@@ -32,8 +41,8 @@ export default function SuppliersPage() {
         supplier.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleAddSupplier = (newSupplier: Omit<Supplier, "id">) => {
-        setSuppliers([...suppliers, { ...newSupplier, id: Date.now() }]);
+    const handleAddSupplier = (newSupplier: Supplier) => {
+        setSuppliers([...suppliers, newSupplier]);
     };
 
     return (
@@ -65,6 +74,7 @@ export default function SuppliersPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead>ID</TableHead>
                                         <TableHead>Fornecedor</TableHead>
                                         <TableHead className="hidden md:table-cell">Telefone</TableHead>
                                         <TableHead>CNPJ</TableHead>
@@ -79,6 +89,7 @@ export default function SuppliersPage() {
                                                 key={supplier.id}
                                                 className="cursor-pointer hover:bg-muted/50"
                                             >
+                                                <TableCell>{supplier.id}</TableCell>
                                                 <TableCell className="font-medium">{supplier.name}</TableCell>
                                                 <TableCell className="hidden md:table-cell">{supplier.phone}</TableCell>
                                                 <TableCell>{supplier.cnpj}</TableCell>
@@ -110,7 +121,7 @@ export default function SuppliersPage() {
                                         ))
                                     ) : (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center">
+                                            <TableCell colSpan={6} className="text-center">
                                                 Nenhum fornecedor encontrado.
                                             </TableCell>
                                         </TableRow>
