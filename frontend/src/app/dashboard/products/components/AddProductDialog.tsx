@@ -13,12 +13,12 @@ import productService from "@/services/productService";
 import supplierService from "@/services/supplierService";
 
 interface AddProductDialogProps {
-    onAddProduct: () => void; // Atualizado para recarregar os produtos
+    onAddProduct: () => void; 
 }
 
 export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
     const [open, setOpen] = useState(false);
-    const [suppliers, setSuppliers] = useState([]); // Lista de fornecedores
+    const [suppliers, setSuppliers] = useState([]); 
     const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>();
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                             >
                                 <SelectTrigger>
                                     {selectedSupplier
-                                        ? suppliers.find((s) => s.id.toString() === selectedSupplier)?.name
+                                        ? suppliers.find((s: any) => s.id.toString() === selectedSupplier)?.name
                                         : "Selecione um fornecedor"}
                                 </SelectTrigger>
                                 <SelectContent>

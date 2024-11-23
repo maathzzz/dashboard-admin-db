@@ -46,7 +46,7 @@ export default function ProductEdit() {
     async function onSubmit(data: ProductFormValues) {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3001/product/update/${params.id}`, {
+            const response = await fetch(`http://localhost:3001/product/${params.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
