@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import productService from "@/services/productService";
+import supplierService from "@/services/supplierService";
 
 interface AddProductDialogProps {
     onAddProduct: () => void; // Atualizado para recarregar os produtos
@@ -15,25 +18,40 @@ interface AddProductDialogProps {
 
 export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
     const [open, setOpen] = useState(false);
+    const [suppliers, setSuppliers] = useState([]); // Lista de fornecedores
+    const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>();
+
+    useEffect(() => {
+        const fetchSuppliers = async () => {
+            try {
+                const supplierData = await supplierService.getSuppliers();
+                setSuppliers(supplierData);
+            } catch (error) {
+                console.error("Erro ao buscar fornecedores:", error);
+                alert("Erro ao carregar a lista de fornecedores.");
+            }
+        };
+
+        fetchSuppliers();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // Cria um objeto com os valores do formulário
         const formData = new FormData(e.currentTarget);
         const productData = {
             name: formData.get("name") as string,
             category: formData.get("category") as string,
             price: parseFloat(formData.get("price") as string),
-            supplierId: parseInt(formData.get("supplierId") as string, 10),
+            supplierId: parseInt(selectedSupplier || "", 10),
             stock: parseInt(formData.get("stock") as string, 10),
             description: formData.get("description") as string,
         };
 
         try {
-            await productService.createProduct(productData); // Chamada do serviço
-            onAddProduct(); // Atualiza a lista de produtos
-            setOpen(false); // Fecha o modal
+            await productService.createProduct(productData);
+            onAddProduct();
+            setOpen(false);
         } catch (error) {
             console.error("Erro ao criar produto:", error);
             alert("Erro ao criar produto.");
@@ -70,8 +88,24 @@ export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="supplierId">ID do Fornecedor</Label>
-                            <Input id="supplierId" name="supplierId" type="number" required min="1" />
+                            <Label htmlFor="supplierId">Fornecedor</Label>
+                            <Select
+                                value={selectedSupplier}
+                                onValueChange={setSelectedSupplier}
+                            >
+                                <SelectTrigger>
+                                    {selectedSupplier
+                                        ? suppliers.find((s) => s.id.toString() === selectedSupplier)?.name
+                                        : "Selecione um fornecedor"}
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {suppliers.map((supplier: any) => (
+                                        <SelectItem key={supplier.id} value={supplier.id.toString()}>
+                                            {supplier.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="grid gap-2">

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import SalesTable from "./components/SalesTable";
 import orderService from "@/services/orderService";
+import { useRouter } from 'next/navigation';
 
 interface SalesSummary {
     totalSales: number;
@@ -12,6 +13,7 @@ interface SalesSummary {
 
 const SalesPage: React.FC = () => {
     const [summary, setSummary] = useState<SalesSummary | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchSalesSummary = async () => {
@@ -25,6 +27,7 @@ const SalesPage: React.FC = () => {
                 });
             } catch (error) {
                 console.error("Erro ao buscar resumo de vendas:", error);
+                router.push('/')
             }
         };
 

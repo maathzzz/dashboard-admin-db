@@ -53,6 +53,7 @@ const orderService = {
       return response.data;
     } catch (error) {
       handleError(error, "Erro ao listar pedidos");
+      router.push("/");
     }
   },
 };

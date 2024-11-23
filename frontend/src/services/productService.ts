@@ -36,7 +36,7 @@ const productService = {
 
   async updateProduct(id: any, productData: any) {
     try {
-      const response = await axios.put(`${API_BASE_URL}/products/${id}`, productData);
+      const response = await axios.put(`${API_BASE_URL}/product/${id}`, productData);
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
@@ -46,7 +46,7 @@ const productService = {
 
   async deleteProduct(id: any) {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/products/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/product/${id}`);
       return response.data;
     } catch (error) {
       console.error("Erro ao deletar produto:", error);

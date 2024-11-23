@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import { AddProductDialog } from "./components/AddProductDialog";
 import productService from "@/services/productService";
@@ -22,6 +23,8 @@ export default function ProductsPage() {
     const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     // Fetch products when the component mounts
     useEffect(() => {
@@ -45,11 +48,13 @@ export default function ProductsPage() {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleDeleteProduct = async (id: any) => {
+    const handleDeleteProduct = async () => {
+        if (!selectedProduct) return;
         try {
-            await productService.deleteProduct(id);
-            setProducts(products.filter((product) => product.id !== id));
+            await productService.deleteProduct(selectedProduct.id);
+            setProducts(products.filter((product) => product.id !== selectedProduct.id));
+            setSelectedProduct(null);
+            setIsDialogOpen(false);
         } catch (error) {
             console.error("Erro ao deletar produto:", error);
         }
@@ -99,7 +104,7 @@ export default function ProductsPage() {
                                 {filteredProducts.map((product) => (
                                     <TableRow
                                         key={product.id}
-                                        className="cursor-pointer hover:bg-muted/50"
+                                        className=":hover:bg-muted/50"
                                     >
                                         <TableCell className="font-medium">{product.id}</TableCell>
                                         <TableCell className="font-medium">{product.name}</TableCell>
@@ -135,7 +140,8 @@ export default function ProductsPage() {
                                                     className="text-destructive"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        handleDeleteProduct(product.id);
+                                                        setSelectedProduct(product);
+                                                        setIsDialogOpen(true);
                                                     }}
                                                 >
                                                     <Trash2 className="h-4 w-4" />
@@ -149,6 +155,26 @@ export default function ProductsPage() {
                     </ScrollArea>
                 </div>
             </div>
+
+            {/* Dialog de Confirmação */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Você tem certeza que deseja excluir o produto{" "}
+                            <span className="font-bold">{selectedProduct?.name}</span>?
+                        </DialogTitle>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button variant="destructive" onClick={handleDeleteProduct}>
+                            Excluir
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
