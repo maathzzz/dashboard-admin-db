@@ -5,7 +5,6 @@ export interface Product {
   name: string;
   category: string;
   price: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stock: number;
   supplier: Supplier;
   supplierId: number;

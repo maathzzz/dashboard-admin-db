@@ -11,6 +11,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Plus } from "lucide-react";
 import productService from "@/services/productService";
 import supplierService from "@/services/supplierService";
+import { Supplier } from "@/data/suppliers";
 
 interface AddProductDialogProps {
     onAddProduct: () => void; 
@@ -18,7 +19,7 @@ interface AddProductDialogProps {
 
 export function AddProductDialog({ onAddProduct }: AddProductDialogProps) {
     const [open, setOpen] = useState(false);
-    const [suppliers, setSuppliers] = useState([]); 
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]); 
     const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>();
 
     useEffect(() => {

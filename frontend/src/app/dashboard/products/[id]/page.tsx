@@ -95,6 +95,7 @@ export default function ProductEdit() {
         description: product.description,
         category: product.category,
         supplierId: product.supplierId.toString(),
+        stock: product.stock
     };
 
     return (

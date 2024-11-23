@@ -24,6 +24,10 @@ const productSchema = z.object({
     description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
     category: z.string().min(1, "Categoria é obrigatória"),
     supplierId: z.string().min(1, "Fornecedor é obrigatório"),
+    stock: z
+        .string()
+        .transform((val) => Number(val))
+        .refine((val) => !isNaN(val) && val >= 0),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
@@ -71,6 +75,25 @@ export function ProductForm({ initialData, supplier, onSubmit, loading }: Produc
                                         step="0.01"
                                         min="0"
                                         placeholder="0.00"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="stock"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Estoque</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        min="0"
+                                        placeholder="Quantidade em estoque"
                                         {...field}
                                     />
                                 </FormControl>
