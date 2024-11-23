@@ -55,6 +55,7 @@ export default function ProductEdit() {
                     ...data,
                     price: Number(data.price),
                     supplierId: Number(data.supplierId),
+                    stock: Number(data.stock)
                 }),
             });
 
@@ -95,7 +96,7 @@ export default function ProductEdit() {
         description: product.description,
         category: product.category,
         supplierId: product.supplierId.toString(),
-        stock: product.stock
+        stock: product.stock.toString()
     };
 
     return (

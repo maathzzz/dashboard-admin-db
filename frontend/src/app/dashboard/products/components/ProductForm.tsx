@@ -24,10 +24,7 @@ const productSchema = z.object({
     description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
     category: z.string().min(1, "Categoria é obrigatória"),
     supplierId: z.string().min(1, "Fornecedor é obrigatório"),
-    stock: z
-        .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val) && val >= 0),
+    stock: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, "Preço deve ser um número válido maior que zero"),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
