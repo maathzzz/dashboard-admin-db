@@ -9,7 +9,7 @@ const supplierService = {
    */
   async getSuppliers() {
     try {
-      const response = await axios.get(`${API_BASE_URL}/supplier/list`);
+      const response = await axios.get(`${API_BASE_URL}/supplier`);
       return response.data;
     } catch (error) {
       console.error("Erro ao listar fornecedores:", error);
@@ -27,7 +27,7 @@ const supplierService = {
    */
   async createSupplier(supplierData: any) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/suppliers`, supplierData);
+      const response = await axios.post(`${API_BASE_URL}/supplier`, supplierData);
       return response.data;
     } catch (error) {
       console.error("Erro ao registrar fornecedor:", error);
@@ -41,7 +41,7 @@ const supplierService = {
    */
   async deleteSupplier(id: any) {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/suppliers/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/supplier/${id}`);
       return response.data;
     } catch (error) {
       console.error("Erro ao deletar fornecedor:", error);
@@ -60,7 +60,7 @@ const supplierService = {
    */
   async updateSupplier(id: any, supplierData: any) {
     try {
-      const response = await axios.put(`${API_BASE_URL}/suppliers/${id}`, supplierData);
+      const response = await axios.put(`${API_BASE_URL}/supplier/${id}`, supplierData);
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar fornecedor:", error);

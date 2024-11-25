@@ -1,49 +1,73 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
-import { AddSupplierDialog } from "./components/AddSupplierDialog";
 import supplierService from "@/services/supplierService";
-
-interface Supplier {
-    id: number;
-    name: string;
-    phone: string;
-    cnpj: string;
-    email: string;
-}
+import { Supplier } from "@/data/suppliers";
+import { AddSupplierDialog } from "./components/AddSupplierDialog";
 
 export default function SuppliersPage() {
+    const router = useRouter();
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
 
+    // Fetch suppliers when the component mounts
     useEffect(() => {
-        const loadSuppliers = async () => {
-            setLoading(true);
+        const fetchSuppliers = async () => {
             try {
                 const data = await supplierService.getSuppliers();
-                setSuppliers(data);
+
+                // Filtra fornecedores válidos
+                const validSuppliers = data.filter((supplier: Supplier) => supplier.name);
+                setSuppliers(validSuppliers);
             } catch (error) {
-                console.error("Erro ao carregar fornecedores:", error);
+                console.error("Erro ao buscar fornecedores:", error);
             }
-            setLoading(false);
         };
 
-        loadSuppliers();
+        fetchSuppliers();
     }, []);
 
-    const filteredSuppliers = suppliers.filter((supplier) =>
-        supplier.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleAddSupplier = (newSupplier: Supplier) => {
-        setSuppliers([...suppliers, newSupplier]);
+    const handleAddSupplier = async () => {
+        try {
+            const data = await supplierService.getSuppliers();
+            setSuppliers(data.filter((supplier: Supplier) => supplier.name)); // Filtra dados válidos
+        } catch (error) {
+            console.error("Erro ao atualizar lista de fornecedores:", error);
+        }
     };
+
+    const handleDeleteSupplier = async () => {
+        if (!selectedSupplier) return;
+        try {
+            await supplierService.deleteSupplier(selectedSupplier.id);
+            setSuppliers(suppliers.filter((supplier) => supplier.id !== selectedSupplier.id));
+            setSelectedSupplier(null);
+            setIsDialogOpen(false);
+        } catch (error) {
+            console.error("Erro ao deletar fornecedor:", error);
+        }
+    };
+
+    const filteredSuppliers = suppliers.filter(
+        (supplier) =>
+            supplier.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false
+    );
 
     return (
         <div className="container mx-auto py-8 px-4">
@@ -67,71 +91,80 @@ export default function SuppliersPage() {
                 </div>
 
                 <div className="rounded-lg border bg-card">
-                    {loading ? (
-                        <p className="text-center py-4">Carregando fornecedores...</p>
-                    ) : (
-                        <ScrollArea className="h-[calc(100vh-16rem)]">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>ID</TableHead>
-                                        <TableHead>Fornecedor</TableHead>
-                                        <TableHead className="hidden md:table-cell">Telefone</TableHead>
-                                        <TableHead>CNPJ</TableHead>
-                                        <TableHead className="hidden sm:table-cell">E-mail</TableHead>
-                                        <TableHead className="text-right"></TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {filteredSuppliers.length > 0 ? (
-                                        filteredSuppliers.map((supplier) => (
-                                            <TableRow
-                                                key={supplier.id}
-                                                className="cursor-pointer hover:bg-muted/50"
+                    <ScrollArea className="h-[calc(100vh-16rem)]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>ID</TableHead>
+                                    <TableHead>Nome</TableHead>
+                                    <TableHead>Telefone</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead className="text-right"></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredSuppliers.map((supplier) => (
+                                    <TableRow key={supplier.id} className=":hover:bg-muted/50">
+                                        <TableCell className="font-medium">{supplier.id}</TableCell>
+                                        <TableCell className="font-medium">{supplier.name}</TableCell>
+                                        <TableCell>{supplier.phone}</TableCell>
+                                        <TableCell>{supplier.email}</TableCell>
+                                        <TableCell className="text-right">
+                                            <div
+                                                className="flex justify-end gap-2"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
-                                                <TableCell>{supplier.id}</TableCell>
-                                                <TableCell className="font-medium">{supplier.name}</TableCell>
-                                                <TableCell className="hidden md:table-cell">{supplier.phone}</TableCell>
-                                                <TableCell>{supplier.cnpj}</TableCell>
-                                                <TableCell className="hidden sm:table-cell">{supplier.email}</TableCell>
-                                                <TableCell className="text-right">
-                                                    <div
-                                                        className="flex justify-end gap-2"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <Button variant="ghost" size="icon">
-                                                            <Pencil className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="text-destructive"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setSuppliers(
-                                                                    suppliers.filter((s) => s.id !== supplier.id)
-                                                                );
-                                                            }}
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={6} className="text-center">
-                                                Nenhum fornecedor encontrado.
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </ScrollArea>
-                    )}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        router.push(`/dashboard/supplier/${supplier.id}`);
+                                                    }}
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-destructive"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedSupplier(supplier);
+                                                        setIsDialogOpen(true);
+                                                    }}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </ScrollArea>
                 </div>
             </div>
+
+            {/* Dialog de Confirmação */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Você tem certeza que deseja excluir o fornecedor{" "}
+                            <span className="font-bold">{selectedSupplier?.name}</span>?
+                        </DialogTitle>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button variant="destructive" onClick={handleDeleteSupplier}>
+                            Excluir
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

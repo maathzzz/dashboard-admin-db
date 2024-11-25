@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import type { Supplier } from "../../../../data/suppliers";
+import supplierService from "@/services/supplierService";
 
-interface AddSuppliertDialogProps {
-    onAddSupplier: (supplier: Omit<Supplier, "id">) => void;
+interface AddSupplierDialogProps {
+    onAddSupplier: () => void;
 }
 
-export function AddSupplierDialog({ onAddSupplier }: AddSuppliertDialogProps) {
+export function AddSupplierDialog({ onAddSupplier }: AddSupplierDialogProps) {
     const [open, setOpen] = useState(false);
     const [newSupplier, setNewSupplier] = useState<Omit<Supplier, "id">>({
         name: "",
@@ -21,16 +22,24 @@ export function AddSupplierDialog({ onAddSupplier }: AddSuppliertDialogProps) {
         email: "",
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onAddSupplier(newSupplier);
-        setOpen(false);
-        setNewSupplier({
-            name: "",
-            phone: "",
-            cnpj: "",
-            email: "",
-        });
+
+        try {
+            await supplierService.createSupplier(newSupplier);
+            onAddSupplier();
+
+            setOpen(false);
+            setNewSupplier({
+                name: "",
+                phone: "",
+                cnpj: "",
+                email: "",
+            });
+        } catch (error) {
+            console.error("Erro ao criar fornecedor:", error);
+            alert("Erro ao criar fornecedor.");
+        }
     };
 
     return (
@@ -53,47 +62,52 @@ export function AddSupplierDialog({ onAddSupplier }: AddSuppliertDialogProps) {
                                 id="name"
                                 required
                                 value={newSupplier.name}
-                                onChange={(e) => setNewSupplier({ ...newSupplier, name: e.target.value })}
+                                onChange={(e) =>
+                                    setNewSupplier({ ...newSupplier, name: e.target.value })
+                                }
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="category">Telefone</Label>
+                            <Label htmlFor="phone">Telefone</Label>
                             <Input
-                                id="category"
+                                id="phone"
                                 required
                                 value={newSupplier.phone}
-                                onChange={(e) => setNewSupplier({ ...newSupplier, phone: e.target.value })}
+                                onChange={(e) =>
+                                    setNewSupplier({ ...newSupplier, phone: e.target.value })
+                                }
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="price">CNPJ</Label>
+                            <Label htmlFor="cnpj">CNPJ</Label>
                             <Input
-                                id="price"
-                                type="number"
-                                step="0.01"
+                                id="cnpj"
                                 required
-                                min="0"
                                 value={newSupplier.cnpj}
-                                onChange={(e) => setNewSupplier({ ...newSupplier, cnpj: e.target.value })}
+                                onChange={(e) =>
+                                    setNewSupplier({ ...newSupplier, cnpj: e.target.value })
+                                }
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="supplier">E-mail</Label>
+                            <Label htmlFor="email">E-mail</Label>
                             <Input
-                                id="supplier"
+                                id="email"
                                 required
                                 value={newSupplier.email}
-                                onChange={(e) => setNewSupplier({ ...newSupplier, email: e.target.value })}
+                                onChange={(e) =>
+                                    setNewSupplier({ ...newSupplier, email: e.target.value })
+                                }
                             />
                         </div>
                     </div>
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                            Cancel
+                            Cancelar
                         </Button>
                         <Button type="submit">Criar</Button>
                     </div>
