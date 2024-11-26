@@ -19,14 +19,12 @@ import { Input } from "@/components/ui/input";
 const supplierSchema = z.object({
     name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
     phone: z
-        .string()
-        .min(10, "Telefone deve ter pelo menos 10 caracteres")
-        .regex(/^\d+$/, "Telefone deve conter apenas números"),
+        .string(),
     email: z.string().email("Email inválido"),
     cnpj: z
         .string()
-        .length(14, "CNPJ deve ter 14 caracteres")
-        .regex(/^\d+$/, "CNPJ deve conter apenas números"),
+        // .length(14, "CNPJ deve ter 14 caracteres")
+        // .regex(/^\d+$/, "CNPJ deve conter apenas números"),
 });
 
 export type SupplierFormValues = z.infer<typeof supplierSchema>;

@@ -119,7 +119,7 @@ export default function SuppliersPage() {
                                                     size="icon"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        router.push(`/dashboard/supplier/${supplier.id}`);
+                                                        router.push(`/dashboard/suppliers/${supplier.id}`);
                                                     }}
                                                 >
                                                     <Pencil className="h-4 w-4" />

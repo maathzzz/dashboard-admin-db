@@ -8,6 +8,10 @@ supplierRoutes.get("/", async (req, res) => {
   await supplier.getSuppliers(req, res);
 });
 
+supplierRoutes.get("/:id", async (req, res) => {
+  await supplier.getSupplierById(req, res);
+});
+
 supplierRoutes.post("/", async (req, res) => {
   await supplier.create(req, res);
 });

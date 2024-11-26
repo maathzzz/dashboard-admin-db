@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,7 +8,6 @@ import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { SupplierForm, SupplierFormValues } from "../components/SupplierForm";
-import supplierService from "@/services/supplierService";
 import { Supplier } from "@/data/suppliers";
 
 export default function SupplierEdit() {
@@ -21,9 +21,14 @@ export default function SupplierEdit() {
     useEffect(() => {
         const fetchSupplier = async () => {
             try {
-                const response = await supplierService.getSuppliers(params.id);
+                const response = await fetch(`http://localhost:3001/supplier/${params.id}`);
 
-                setSupplier(response);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch supplier");
+                }
+
+                const supplierData = await response.json();
+                setSupplier(supplierData);
             } catch (error) {
                 toast({
                     variant: "destructive",
@@ -41,16 +46,22 @@ export default function SupplierEdit() {
     async function onSubmit(data: SupplierFormValues) {
         setLoading(true);
         try {
-            await supplierService.updateSupplier(params.id, {
-                ...data,
+            const response = await fetch(`http://localhost:3001/supplier/${params.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
             });
+
+            if (!response.ok) throw new Error("Erro ao atualizar fornecedor");
 
             toast({
                 title: "Sucesso",
                 description: "Fornecedor atualizado com sucesso",
             });
 
-            router.push("/dashboard/supplier");
+            router.push("/dashboard/suppliers");
         } catch (error) {
             toast({
                 variant: "destructive",

@@ -12,6 +12,25 @@ class SupplierController {
     }
   }
 
+  async getSupplierById(req, res) {
+    const { id } = req.params;
+
+    try {
+      const supplier = await prisma.supplier.findUnique({
+        where: { id: parseInt(id, 10) },
+      });
+
+      if (!supplier) {
+        return res.status(404).json({ error: 'Fornecedor não encontrado.' });
+      }
+
+      return res.json(supplier);
+    } catch (error) {
+      console.error('Erro ao buscar fornecedor por ID:', error);
+      return res.status(500).json({ error: 'Erro ao buscar fornecedor.' });
+    }
+  }
+
   async create(req, res) {
     const { 
       name, 
