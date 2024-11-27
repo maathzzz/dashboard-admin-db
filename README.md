@@ -39,7 +39,7 @@ npm i
 ## Rodando o Banco de Dados com Docker
 
 1. Certifique-se de que Docker está instalado e rodando.
-2. Na pasta raiz do projeto (onde está o arquivo `docker-compose.yml`), execute o comando para subir os containers do banco de dados:
+2. Na pasta do projeto backend (onde está o arquivo `docker-compose.yml`), execute o comando para subir os containers do banco de dados:
 
 ```bash
 docker compose up -d
@@ -98,7 +98,7 @@ npx prisma migrate dev --name init
 
 ## Contributing
 
-Use [semantic commit messages](https://www.conventionalcommits.org/):
+Use [semantic commit messages:](https://www.conventionalcommits.org/)
 
 - feat(context): nova funcionalidade para o usuário final;
 - fix(context): correção de bug para o usuário final;
