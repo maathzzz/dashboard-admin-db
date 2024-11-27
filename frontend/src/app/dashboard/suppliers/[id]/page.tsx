@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { SupplierForm, SupplierFormValues } from "../components/SupplierForm";
 import { Supplier } from "@/types/suppliers";
+import { getToken } from "@/services/authService";
+import supplierService from "@/services/supplierService"
 
 export default function SupplierEdit() {
     const params = useParams();
@@ -18,18 +20,15 @@ export default function SupplierEdit() {
     const [initialLoading, setInitialLoading] = useState(true);
     const [supplier, setSupplier] = useState<Supplier | null>(null);
 
+    const token = getToken();
+
     useEffect(() => {
         const fetchSupplier = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/supplier/${params.id}`);
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch supplier");
-                }
-
-                const supplierData = await response.json();
+                const supplierData = await supplierService.getSupplierById(params.id); // Usando o serviço
                 setSupplier(supplierData);
             } catch (error) {
+                console.error("Erro ao carregar dados do fornecedor:", error);
                 toast({
                     variant: "destructive",
                     title: "Erro",
@@ -50,6 +49,7 @@ export default function SupplierEdit() {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(data),
             });

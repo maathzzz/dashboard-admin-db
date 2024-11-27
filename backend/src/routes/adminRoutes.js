@@ -13,7 +13,7 @@ adminRoutes.get("/list", auth, async (req, res) => {
   await admin.getAdmins(req, res);
 });
 
-adminRoutes.post("/register", async (req, res) => {
+adminRoutes.post("/register", auth, async (req, res) => {
   await admin.create(req, res);
 });
 

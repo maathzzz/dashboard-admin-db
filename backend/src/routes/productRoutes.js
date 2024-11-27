@@ -1,26 +1,27 @@
 const { Router } = require("express");
 const ProductController = require("../controllers/ProductController");
+const auth = require("../middlewares/auth");
 
 const productRoutes = Router();
 const product = new ProductController();
 
-productRoutes.get("/", async (req, res) => {
+productRoutes.get("/", auth, async (req, res) => {
   await product.getProducts(req, res);
 });
 
-productRoutes.get("/:id", async (req, res) => {
+productRoutes.get("/:id", auth,  async (req, res) => {
   await product.getProductById(req, res);
 });
 
-productRoutes.post("/", async (req, res) => {
+productRoutes.post("/", auth, async (req, res) => {
   await product.create(req, res);
 });
 
-productRoutes.delete("/:id", async (req, res) => {
+productRoutes.delete("/:id", auth, async (req, res) => {
   await product.delete(req, res);
 });
 
-productRoutes.put("/:id", async (req, res) => {
+productRoutes.put("/:id", auth, async (req, res) => {
   await product.update(req, res);
 });
 

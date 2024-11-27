@@ -1,12 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
+import { getToken } from './authService';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const productService = {
   async getProducts() {
     try {
-      const response = await axios.get(`${API_BASE_URL}/product/`);
+      const token = getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado. Token não encontrado.");
+      }
+      const response = await axios.get(`${API_BASE_URL}/product/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
@@ -16,7 +25,15 @@ const productService = {
 
   async getProductById(id: any) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/product/${id}`);
+      const token = getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado. Token não encontrado.");
+      }
+      const response = await axios.get(`${API_BASE_URL}/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar produto:", error);
@@ -26,7 +43,15 @@ const productService = {
 
   async createProduct(productData: any) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/product`, productData);
+      const token = getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado. Token não encontrado.");
+      }
+      const response = await axios.post(`${API_BASE_URL}/product`, productData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Erro ao criar produto:", error);
@@ -36,7 +61,15 @@ const productService = {
 
   async updateProduct(id: any, productData: any) {
     try {
-      const response = await axios.put(`${API_BASE_URL}/product/${id}`, productData);
+      const token = getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado. Token não encontrado.");
+      }
+      const response = await axios.put(`${API_BASE_URL}/product/${id}`, productData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
@@ -46,7 +79,15 @@ const productService = {
 
   async deleteProduct(id: any) {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/product/${id}`);
+      const token = getToken();
+      if (!token) {
+        throw new Error("Usuário não autenticado. Token não encontrado.");
+      }
+      const response = await axios.delete(`${API_BASE_URL}/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Erro ao deletar produto:", error);
