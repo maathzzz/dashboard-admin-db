@@ -6,14 +6,13 @@ async getProducts(req, res) {
     try {
         const products = await prisma.product.findMany({
             include: {
-                supplier: true, // Inclui o fornecedor, mas não exige que esteja presente
+                supplier: true, 
             },
         });
 
-        // Tratar os dados para evitar inconsistências
         const safeProducts = products.map((product) => ({
             ...product,
-            supplier: product.supplier || {}, // Retorna um objeto vazio caso `supplier` seja `null`
+            supplier: product.supplier || {},
         }));
 
         return res.json(safeProducts);
@@ -37,10 +36,9 @@ async getProducts(req, res) {
         return res.status(404).json({ error: "Produto não encontrado." });
       }
 
-      // Retorna o produto com `supplier` como objeto vazio caso seja `null`
       return res.json({
         ...product,
-        supplier: product.supplier || {}, // Retorna um objeto vazio para `supplier`
+        supplier: product.supplier || {},
       });
     } catch (error) {
       console.error("Erro ao buscar produto:", error);

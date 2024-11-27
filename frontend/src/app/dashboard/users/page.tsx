@@ -36,6 +36,7 @@ export default function UserList() {
       const data = await userService.getUsers();
       setUsers(data);
       setFilteredUsers(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         variant: "destructive",

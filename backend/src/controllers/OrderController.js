@@ -77,12 +77,10 @@ class OrderController {
 
   async listOrders(req, res) {
     try {
-      // Busca todas as ordens e inclui os itens
       const orders = await prisma.order.findMany({
         include: { items: { include: { product: true } } },
       });
 
-      // Calcula os valores agregados
       const totalSales = orders.reduce((sum, order) => sum + order.total_price, 0);
       const totalItemsSold = orders.reduce(
         (sum, order) =>
@@ -93,13 +91,12 @@ class OrderController {
       const orderCount = orders.length;
       const averageTicket = orderCount > 0 ? totalSales / orderCount : 0;
 
-      // Estrutura a resposta
       return res.json({
         totalSales,
         totalItemsSold,
         orderCount,
         averageTicket,
-        data: orders, // Inclui o array de ordens completas
+        data: orders,
       });
     } catch (error) {
       console.error("Erro ao listar ordens:", error);

@@ -18,6 +18,7 @@ import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import supplierService from "@/services/supplierService";
 import { Supplier } from "@/types/suppliers";
 import { AddSupplierDialog } from "./components/AddSupplierDialog";
+import { useToast } from "@/hooks/use-toast"; // Importa o hook de toast do ShadCN
 
 export default function SuppliersPage() {
     const router = useRouter();
@@ -25,6 +26,7 @@ export default function SuppliersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+    const { toast } = useToast();
 
     // Fetch suppliers when the component mounts
     useEffect(() => {
@@ -37,6 +39,7 @@ export default function SuppliersPage() {
                 setSuppliers(validSuppliers);
             } catch (error) {
                 console.error("Erro ao buscar fornecedores:", error);
+                router.push('/');
             }
         };
 
@@ -46,7 +49,7 @@ export default function SuppliersPage() {
     const handleAddSupplier = async () => {
         try {
             const data = await supplierService.getSuppliers();
-            setSuppliers(data.filter((supplier: Supplier) => supplier.name)); // Filtra dados válidos
+            setSuppliers(data.filter((supplier: Supplier) => supplier.name)); 
         } catch (error) {
             console.error("Erro ao atualizar lista de fornecedores:", error);
         }
@@ -59,6 +62,11 @@ export default function SuppliersPage() {
             setSuppliers(suppliers.filter((supplier) => supplier.id !== selectedSupplier.id));
             setSelectedSupplier(null);
             setIsDialogOpen(false);
+            toast({
+                title: 'Fornecedor apagado com sucesso!',
+                description: 'Lista de fornecedores atualizada',
+                variant: 'default',
+            });
         } catch (error) {
             console.error("Erro ao deletar fornecedor:", error);
         }

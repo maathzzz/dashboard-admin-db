@@ -18,6 +18,7 @@ import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import { AddProductDialog } from "./components/AddProductDialog";
 import productService from "@/services/productService";
 import { Product } from "@/types/products";
+import { useToast } from "@/hooks/use-toast"; // Importa o hook de toast do ShadCN
 
 export default function ProductsPage() {
     const router = useRouter();
@@ -25,6 +26,7 @@ export default function ProductsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const { toast } = useToast();
 
     // Fetch products when the component mounts
     useEffect(() => {
@@ -34,6 +36,7 @@ export default function ProductsPage() {
                 setProducts(data);
             } catch (error) {
                 console.error("Erro ao buscar produtos:", error);
+                router.push('/');
             }
         };
         fetchProducts();
@@ -43,6 +46,11 @@ export default function ProductsPage() {
         try {
             const data = await productService.getProducts();
             setProducts(data);
+            toast({
+                title: 'Produto criado com sucesso!',
+                description: 'Lista de produtos atualizada',
+                variant: 'default',
+            });
         } catch (error) {
             console.error("Erro ao atualizar lista de produtos:", error);
         }
@@ -55,6 +63,11 @@ export default function ProductsPage() {
             setProducts(products.filter((product) => product.id !== selectedProduct.id));
             setSelectedProduct(null);
             setIsDialogOpen(false);
+            toast({
+                title: 'Produto apagado com sucesso!',
+                description: 'Lista de produtos atualizada',
+                variant: 'default',
+            });
         } catch (error) {
             console.error("Erro ao deletar produto:", error);
         }
