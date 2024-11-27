@@ -19,6 +19,8 @@ class OrderController {
         })
       ).then((prices) => prices.reduce((acc, curr) => acc + curr, 0));
 
+      const now = new Date();
+
       const order = await prisma.order.create({
         data: {
           description,
@@ -26,6 +28,7 @@ class OrderController {
           payment_method,
           total_price,
           user_id,
+          date: now,
           items: {
             create: items.map(({ product_id, quantity }) => ({
               product_id,

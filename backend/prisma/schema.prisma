@@ -55,7 +55,7 @@ model Order {
   address        String     
   payment_method String     
   total_price    Float      
-  date           DateTime   @default(now()) 
+  date           DateTime    
   user           User       @relation(fields: [user_id], references: [id])
   user_id        Int        
 }
