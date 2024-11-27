@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ProductForm, ProductFormValues } from "../components/ProductForm";
 import { Product } from "@/types/products";
+import productService from "@/services/productService";
+import { getToken } from "@/services/authService";
 
 export default function ProductEdit() {
     const params = useParams();
@@ -18,29 +20,26 @@ export default function ProductEdit() {
     const [initialLoading, setInitialLoading] = useState(true);
     const [product, setProduct] = useState<Product | null>(null);
 
+    const token = getToken();
+
+    const fetchProduct = async (id: any) => {
+        try {
+            const productData = await productService.getProductById(id); // Usando o serviço
+            setProduct(productData);
+        } catch (error) {
+            console.error("Erro ao carregar dados do produto:", error);
+            toast({
+                variant: "destructive",
+                title: "Erro",
+                description: "Erro ao carregar dados do produto",
+            });
+        } finally {
+            setInitialLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const response = await fetch(`http://localhost:3001/product/${params.id}`);
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch product");
-                }
-
-                const productData = await response.json();
-                setProduct(productData);
-            } catch (error) {
-                toast({
-                    variant: "destructive",
-                    title: "Erro",
-                    description: "Erro ao carregar dados do produto",
-                });
-            } finally {
-                setInitialLoading(false);
-            }
-        };
-
-        fetchProduct();
+        fetchProduct(params.id); // Chamada ao método usando o ID dos parâmetros
     }, [params.id, toast]);
 
     async function onSubmit(data: ProductFormValues) {
@@ -50,6 +49,7 @@ export default function ProductEdit() {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     ...data,

@@ -46,6 +46,8 @@ import { Icons } from '../icons';
 // import SearchInput from '../search-input';
 import ThemeToggle from './ThemeToggle/theme-toggle';
 import { UserNav } from './user-nav';
+import { removeToken } from '@/services/authService';
+import { useRouter } from 'next/navigation';
 
 export const company = {
     name: 'Unisagrado',
@@ -61,6 +63,7 @@ export default function AppSidebar({
     const [mounted, setMounted] = React.useState(false);
     // const { data: session } = useSession();
     const pathname = usePathname();
+    const router = useRouter();
     // Only render after first client-side mount
     React.useEffect(() => {
         setMounted(true);
@@ -69,6 +72,11 @@ export default function AppSidebar({
     if (!mounted) {
         return null; // or a loading skeleton
     }
+
+    const handleLogout = () => {
+        removeToken(); // Remove o token de autenticação
+        router.push('/'); // Redireciona para a página inicial
+    };
 
     return (
         <SidebarProvider>
@@ -166,11 +174,11 @@ export default function AppSidebar({
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-semibold">
                                                 {/* {session?.user?.name || ''} */}
-                                                username
+                                                Administrador
                                             </span>
                                             <span className="truncate text-xs">
                                                 {/* {session?.user?.email || ''} */}
-                                                email
+                                                Painel
                                             </span>
                                         </div>
                                         <ChevronsUpDown className="ml-auto size-4" />
@@ -182,7 +190,7 @@ export default function AppSidebar({
                                     align="end"
                                     sideOffset={4}
                                 >
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleLogout}>
                                         <LogOut />
                                         Sair
                                     </DropdownMenuItem>
