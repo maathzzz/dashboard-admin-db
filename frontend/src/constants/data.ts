@@ -123,7 +123,7 @@ export type Product = {
 
 export const navItems: NavItem[] = [
   {
-    title: 'Painel',
+    title: 'Sobre',
     url: '/dashboard/',
     icon: 'dashboard',
     isActive: false,
@@ -147,24 +147,12 @@ export const navItems: NavItem[] = [
     title: 'Fornecedores',
     url: '/dashboard/suppliers',
     icon: 'billing',
-    isActive: true,
+    isActive: false,
   },
   {
-    title: 'Usuário',
-    url: '#',
-    icon: 'user',
+    title: 'Usuários',
+    url: '/dashboard/users',
+    icon: 'userPen',
     isActive: false,
-        items: [
-      {
-        title: 'Usuários',
-        url: '/dashboard/users',
-        icon: 'userPen'
-      },
-      {
-        title: 'Administradores',
-        url: '/dashboard/admin',
-        icon: 'login'
-      }
-    ]
-  }
+  },
 ];

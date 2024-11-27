@@ -11,7 +11,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Plus } from "lucide-react";
 import productService from "@/services/productService";
 import supplierService from "@/services/supplierService";
-import { Supplier } from "@/data/suppliers";
+import { Supplier } from "@/types/suppliers";
 
 interface AddProductDialogProps {
     onAddProduct: () => void; 

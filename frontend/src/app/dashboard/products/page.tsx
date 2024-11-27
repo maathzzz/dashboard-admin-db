@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import { AddProductDialog } from "./components/AddProductDialog";
 import productService from "@/services/productService";
-import { Product } from "@/data/products";
+import { Product } from "@/types/products";
 
 export default function ProductsPage() {
     const router = useRouter();

@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ProductForm, ProductFormValues } from "../components/ProductForm";
-import { Product } from "../../../../data/products";
+import { Product } from "@/types/products";
 
 export default function ProductEdit() {
     const params = useParams();

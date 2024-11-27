@@ -16,7 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Package2, Search, Pencil, Trash2 } from "lucide-react";
 import supplierService from "@/services/supplierService";
-import { Supplier } from "@/data/suppliers";
+import { Supplier } from "@/types/suppliers";
 import { AddSupplierDialog } from "./components/AddSupplierDialog";
 
 export default function SuppliersPage() {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-import type { Supplier } from "../../../../data/suppliers";
+import type { Supplier } from "../../../../types/suppliers";
 import supplierService from "@/services/supplierService";
 
 interface AddSupplierDialogProps {

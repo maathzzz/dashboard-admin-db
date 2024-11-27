@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Supplier } from "../../../../data/suppliers";
+import { Supplier } from "../../../../types/suppliers";
 
 const productSchema = z.object({
     name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),

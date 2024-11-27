@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { SupplierForm, SupplierFormValues } from "../components/SupplierForm";
-import { Supplier } from "@/data/suppliers";
+import { Supplier } from "@/types/suppliers";
 
 export default function SupplierEdit() {
     const params = useParams();
