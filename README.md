@@ -111,6 +111,5 @@ Use [semantic commit messages:](https://www.conventionalcommits.org/)
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-@ Unisagrado - 2024
 
 
