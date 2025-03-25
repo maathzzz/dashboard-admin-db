@@ -3,7 +3,7 @@ const database = require('./config/database');
 const { PORT } = require('./config/env/environment'); 
 
 // Created by Matheus de Amorim Favero
-// Unisagrado 2024
+// Unisagrado 2025
 
 database.open()
   .then(() => {
